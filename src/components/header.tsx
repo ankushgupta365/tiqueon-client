@@ -18,6 +18,7 @@ const Header = () => {
   const pathname = location.pathname;
 
   const getPageLabel = (pathname: string) => {
+    if(pathname.includes("/task/")) return "Task Details";
     if (pathname.includes("/project/")) return "Project";
     if (pathname.includes("/settings")) return "Settings";
     if (pathname.includes("/tasks")) return "Tasks";

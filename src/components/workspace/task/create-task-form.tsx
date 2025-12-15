@@ -34,19 +34,38 @@ import {
   transformOptions,
 } from "@/lib/helper";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { TaskPriorityEnum, TaskStatusEnum } from "@/constant";
+import { TaskPriorityEnum, TaskStatusEnum, TaskTypeEnum } from "@/constant";
 import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
 import useGetWorkspaceMembers from "@/hooks/api/use-get-workspace-members";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createTaskMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import RichTextEditor from "@/components/RichTextEditor";
+import { useRef, useState } from "react";
+
+//rich text editor interface, upload files
+interface UploadedFile {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url?: string;
+  thumbnailUrl?: string;
+}
+
+interface RichTextEditorRef {
+  getContent: () => string;
+  getFiles: () => UploadedFile[];
+  clear: () => void;
+}
 
 export default function CreateTaskForm(props: {
   projectId?: string;
   onClose: () => void;
 }) {
   const { projectId, onClose } = props;
+  const editorRef = useRef<RichTextEditorRef | null>(null);
 
   const queryClient = useQueryClient();
   const workspaceId = useWorkspaceId();
@@ -64,6 +83,7 @@ export default function CreateTaskForm(props: {
 
   const projects = data?.projects || [];
   const members = memberData?.members || [];
+
 
   //Workspace Projects
   const projectOptions = projects?.map((project) => {
@@ -102,7 +122,10 @@ export default function CreateTaskForm(props: {
     title: z.string().trim().min(1, {
       message: "Title is required",
     }),
-    description: z.string().trim(),
+    description: z.string().min(1, {
+      message: "Description is required",
+    }),
+    files: z.array(z.any()).optional(),
     projectId: z.string().trim().min(1, {
       message: "Project is required",
     }),
@@ -116,6 +139,12 @@ export default function CreateTaskForm(props: {
       Object.values(TaskPriorityEnum) as [keyof typeof TaskPriorityEnum],
       {
         required_error: "Priority is required",
+      }
+    ),
+    type: z.enum(
+      Object.values(TaskTypeEnum) as [keyof typeof TaskTypeEnum],
+      {
+        required_error: "Task type is required",
       }
     ),
     assignedTo: z.string().trim().min(1, {
@@ -137,17 +166,25 @@ export default function CreateTaskForm(props: {
 
   const taskStatusList = Object.values(TaskStatusEnum);
   const taskPriorityList = Object.values(TaskPriorityEnum); // ["LOW", "MEDIUM", "HIGH", "URGENT"]
+  const taskTypeList = Object.values(TaskTypeEnum); // ["BUG", "FEATURE", "DOCUMENTATION", "SERVICE_REQUEST"]
+
 
   const statusOptions = transformOptions(taskStatusList);
   const priorityOptions = transformOptions(taskPriorityList);
+  const typeOptions = transformOptions(taskTypeList);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (isPending) return;
+
+    const files = editorRef.current?.getFiles() || [];
+
+
     const payload = {
       workspaceId,
       projectId: values.projectId,
       data: {
         ...values,
+        files: files,
         dueDate: values.dueDate.toISOString(),
       },
     };
@@ -222,20 +259,24 @@ export default function CreateTaskForm(props: {
               <FormField
                 control={form.control}
                 name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="dark:text-[#f1f7feb5] text-sm">
-                      Task description
-                      <span className="text-xs font-extralight ml-2">
-                        Optional
-                      </span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea rows={1} placeholder="Description" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const { ref: fieldRef, ...restOfField } = field;
+                  return (
+                    <FormItem>
+                      <FormLabel className="dark:text-[#f1f7feb5] text-sm">
+                        Task description
+                      </FormLabel>
+                      <FormControl>
+                        {/* <Textarea rows={1} placeholder="Description" {...field} /> */}
+                        <RichTextEditor placeholder="Add your description"  {...restOfField} ref={(instance) => {
+                          fieldRef(instance); // 1. Pass instance to react-hook-form
+                          editorRef.current = instance; // 2. Set your own ref
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
 
@@ -365,7 +406,7 @@ export default function CreateTaskForm(props: {
                           disabled={
                             (date) =>
                               date <
-                                new Date(new Date().setHours(0, 0, 0, 0)) || // Disable past dates
+                              new Date(new Date().setHours(0, 0, 0, 0)) || // Disable past dates
                               date > new Date("2100-12-31") //Prevent selection beyond a far future date
                           }
                           initialFocus
@@ -444,6 +485,41 @@ export default function CreateTaskForm(props: {
                             value={priority.value}
                           >
                             {priority.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* {type} */}
+            <div>
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Task Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select task type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {typeOptions?.map((type) => (
+                          <SelectItem
+                            className="!capitalize"
+                            key={type.value}
+                            value={type.value}
+                          >
+                            {type.label}
                           </SelectItem>
                         ))}
                       </SelectContent>

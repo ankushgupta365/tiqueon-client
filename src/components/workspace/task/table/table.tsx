@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import TableSkeleton from "@/components/skeleton-loaders/table-skeleton";
 import { DataTablePagination } from "./table-pagination";
+import { Link } from "react-router-dom";
 
 interface PaginationProps {
   totalCount: number;
@@ -147,6 +148,7 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                   >
+                    <Link to={`/workspace/${(row.original as any).workspace}/project/${(row.original as any).project._id}/task/${(row.original as any)._id}`} style={{ display: 'contents' }}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(
@@ -155,6 +157,7 @@ export function DataTable<TData, TValue>({
                         )}
                       </TableCell>
                     ))}
+                    </Link>
                   </TableRow>
                 ))
               ) : (
