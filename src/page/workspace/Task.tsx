@@ -1,6 +1,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+// import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -21,26 +21,26 @@ import {
 import {
   AlarmClock,
   ArrowUp,
-  AtSign,
-  Bold,
+  // AtSign,
+  // Bold,
   ChevronsRight,
   Clock,
-  Italic,
-  Link,
+  // Italic,
+  // Link,
   Paperclip,
   Plus,
   Send,
-  Smile,
+  // Smile,
   User,
   X,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { TimeLogDialog } from "@/components/workspace/time/TimeLogDialog";
 
 import { UserPopover } from "@/components/workspace/common/user-popover";
 import { RichTextEditor } from "@/components/RichTextEditor";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 
 // --- DUMMY DATA AND TYPES ---
 
@@ -303,28 +303,28 @@ const TaskPage = () => {
   const editorRef = useRef<RichTextEditorRef>(null);
 
 
-  function Preview({ html }: { html: string }) {
-    return (
-      <div
-        className={html.length > 0 ? cn(
-          'prose prose-sm max-w-none p-6 outline-none',
-          'overflow-y-auto',
-          '[&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:mb-4 [&_h1]:mt-6',
-          '[&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:mt-5',
-          '[&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mb-2 [&_h3]:mt-4',
-          '[&_blockquote]:border-l-4 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground',
-          '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
-          '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
-          '[&_li]:my-1',
-          '[&_pre]:bg-muted [&_pre]:rounded-md [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:my-2 [&_pre]:overflow-x-auto',
-          '[&_code]:bg-muted [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm',
-          '[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2',
-          'focus:outline-none'
-        ) : 'none'}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
-  }
+  // function Preview({ html }: { html: string }) {
+  //   return (
+  //     <div
+  //       className={html.length > 0 ? cn(
+  //         'prose prose-sm max-w-none p-6 outline-none',
+  //         'overflow-y-auto',
+  //         '[&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:mb-4 [&_h1]:mt-6',
+  //         '[&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mb-3 [&_h2]:mt-5',
+  //         '[&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mb-2 [&_h3]:mt-4',
+  //         '[&_blockquote]:border-l-4 [&_blockquote]:border-primary/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground',
+  //         '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
+  //         '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
+  //         '[&_li]:my-1',
+  //         '[&_pre]:bg-muted [&_pre]:rounded-md [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:my-2 [&_pre]:overflow-x-auto',
+  //         '[&_code]:bg-muted [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm',
+  //         '[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2',
+  //         'focus:outline-none'
+  //       ) : 'none'}
+  //       dangerouslySetInnerHTML={{ __html: html }}
+  //     />
+  //   );
+  // }
 
  function getCommentAndFiles(){
    // Get HTML content
@@ -332,7 +332,7 @@ const TaskPage = () => {
 
   // Get files
   const files = editorRef.current?.getFiles();
-  
+
   console.log("Comment HTML:", html);
   console.log("Uploaded Files:", files);
  }

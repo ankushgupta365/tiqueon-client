@@ -21,7 +21,7 @@ import {
   FileImage,
   File,
   Check,
-  AtSign,
+  // AtSign,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -239,22 +239,22 @@ const FilePlaceholder = ({ file, onRemove }: FilePlaceholderProps) => {
 
 
 // Mention tag component
-interface MentionTagProps {
-  user: MentionUser;
-}
+// interface MentionTagProps {
+//   user: MentionUser;
+// }
 
 
-const MentionTag = ({ user }: MentionTagProps) => (
-  <span
-    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary mx-0.5"
-    contentEditable={false}
-    data-mention-id={user.id}
-    data-testid={`mention-tag-${user.username}`}
-  >
-    <AtSign className="h-3 w-3" />
-    {user.displayName}
-  </span>
-);
+// const MentionTag = ({ user }: MentionTagProps) => (
+//   <span
+//     className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary mx-0.5"
+//     contentEditable={false}
+//     data-mention-id={user.id}
+//     data-testid={`mention-tag-${user.username}`}
+//   >
+//     <AtSign className="h-3 w-3" />
+//     {user.displayName}
+//   </span>
+// );
 
 
 // Mention dropdown component
